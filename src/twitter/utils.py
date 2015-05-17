@@ -70,6 +70,11 @@ def is_audio(tweet,force=False):
  tweet['is_audio']=False
  return False
 
+def is_longtweet(tweet):
+ for u in find_urls(tweet):
+  if "twitter.com/status/" in u.lower()" or "twishort.com/" in u.lower():
+   return True
+ return False
 def is_geocoded(tweet):
  if tweet.has_key("coordinates") and tweet["coordinates"] != None:
   return True
