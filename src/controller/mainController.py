@@ -1017,6 +1017,9 @@ class Controller(object):
    return sound.URLPlayer.stop_audio(delete=True)
   tweet = buffer.get_tweet()
   url=None
+  long = utils.is_longtweet(tweet)
+  if long != False and long[0] == 'Twishort':
+   return messages.viewTweet(twishort.get_full_text(long[1]),is_tweet=False)
   urls = utils.find_urls(tweet)
   if len(urls) == 1:
    url=urls[0]

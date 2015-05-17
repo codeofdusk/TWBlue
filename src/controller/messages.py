@@ -153,7 +153,7 @@ class dm(basicTweet):
   c.show_menu("dm")
 
 class viewTweet(basicTweet):
- def __init__(self, tweet, tweetList, is_tweet=True):
+ def __init__(self, tweet, tweetList=None, is_tweet=True):
   if is_tweet == True:
    text = ""
    for i in xrange(0, len(tweetList)):
