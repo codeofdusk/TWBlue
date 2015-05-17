@@ -18,7 +18,6 @@
 ############################################################
 import requests
 import keys
-from twitter import utils
 
 def get_twishort_uri(url):
  return url.split("twishort.com/")[1]

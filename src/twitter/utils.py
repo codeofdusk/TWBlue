@@ -7,6 +7,7 @@ import logging
 import requests
 import time
 import sound
+from long_tweets import twishort,tweets
 log = logging.getLogger("twitter.utils")
 """ Some utilities for the twitter interface."""
 
@@ -72,9 +73,13 @@ def is_audio(tweet,force=False):
 
 def is_longtweet(tweet):
  for u in find_urls(tweet):
-  if "twitter.com/status/" in u.lower()" or "twishort.com/" in u.lower():
-   return True
- return False
+  uri=tweets.is_long(tweet)
+  if uri != False:
+   return 'Twitter',uri
+  uri=twishort.is_long(tweet)
+  if uri != False:
+   return 'Twishort',uri
+  return False
 def is_geocoded(tweet):
  if tweet.has_key("coordinates") and tweet["coordinates"] != None:
   return True
