@@ -78,6 +78,11 @@ WXPython must be installed using pip. To install it, run the following command:
 
     pip install -U --pre -f https://wxpython.org/Phoenix/snapshot-builds/ wxPython
 
+#### Dependencies that must be installed using pip
+WXPython must be installed using pip. To install it, run the following command:
+
+    pip install -U --pre -f https://wxpython.org/Phoenix/snapshot-builds/ wxPython
+
 #### Other dependencies
 
 These dependencies are located in the windows-dependencies directory. You don't need to install or modify them.
