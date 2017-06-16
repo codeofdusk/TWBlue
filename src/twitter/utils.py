@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-
-from builtins import str
-from builtins import range
+from __future__ import print_function
 import url_shortener, re
 import output
 from twython import TwythonError
@@ -139,9 +137,9 @@ def is_allowed(tweet, clients):
 
 def twitter_error(error):
  if error.error_code == 403:
-  msg = _("Sorry, you are not authorised to see this status.")
+  msg = _(u"Sorry, you are not authorised to see this status.")
  elif error.error_code == 404:
-  msg = _("No status found with that ID")
+  msg = _(u"No status found with that ID")
  else:
-  msg = _("Error code {0}").format(error.error_code,)
+  msg = _(u"Error code {0}").format(error.error_code,)
  output.speak(msg)

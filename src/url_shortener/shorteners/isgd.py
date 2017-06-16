@@ -1,7 +1,5 @@
-
-from future import standard_library
-standard_library.install_aliases()
-import urllib.request, urllib.parse, urllib.error
+from __future__ import absolute_import
+import urllib
 
 from .url_shortener import URLShortener
 
@@ -13,7 +11,7 @@ class IsgdShortener (URLShortener):
 
  def _shorten (self, url):
   answer = url
-  api = urllib.request.urlopen ("http://is.gd/api.php?longurl=" + urllib.parse.quote(url))
+  api = urllib.urlopen ("http://is.gd/api.php?longurl=" + urllib.quote(url))
   if api.getcode() == 200:
    answer = api.read()
   api.close()

@@ -1,5 +1,4 @@
-
-from builtins import str
+from __future__ import absolute_import
 from AppKit import *
 from PyObjCTools import AppHelper
 from Carbon.CarbonEvt import RegisterEventHotKey, GetApplicationEventTarget
@@ -53,6 +52,6 @@ class KeyboardCapturingNSApplication(NSApplication):
  def sendEvent_(self, theEvent):
   if theEvent.type() == NSSystemDefined and theEvent.subtype() == kEventHotKeyPressedSubtype:
    self.activateIgnoringOtherApps_(True)
-   NSRunAlertPanel('Hot Key Pressed', 'Hot Key Pressed', None, None, None)
+   NSRunAlertPanel(u'Hot Key Pressed', u'Hot Key Pressed', None, None, None)
    super(NSApplication, self).sendEvent_(theEvent)
 

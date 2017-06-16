@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 """ The main session object. Here are the twitter functions to interact with the "model" of TWBlue."""
-
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
-from builtins import range
-from builtins import object
-import urllib.request, urllib.error, urllib.parse
+from __future__ import absolute_import
+import urllib2
 import config
 import twitter
 from keys import keyring
@@ -178,10 +173,10 @@ class Session(object):
   results = []
   data = getattr(self.twitter.twitter, update_function)(*args, **kwargs)
   if users == True:
-   if isinstance(data, dict) and "next_cursor" in data:
+   if type(data) == dict and "cursor" in data:
     self.db[name]["cursor"] = data["next_cursor"]
     for i in data["users"]: results.append(i)
-   elif isinstance(data, list):
+   elif type(data) == list:
     results.extend(data[1:])
   else:
    results.extend(data[1:])
@@ -413,12 +408,12 @@ class Session(object):
    if not os.path.exists(shelfname):
     output.speak("Generating database, this might take a while.",True)
    shelf=shelve.open(paths.config_path(shelfname),'c')
-   for key,value in list(self.db.items()):
-    if not isinstance(key, str) and not isinstance(key, str):
+   for key,value in self.db.items():
+    if type(key) != str and type(key) != unicode:
         output.speak("Uh oh, while shelving the database, a key of type " + str(type(key)) + " has been found. It will be converted to type str, but this will cause all sorts of problems on deshelve. Please bring this to the attention of the " + application.name + " developers immediately. More information about the error will be written to the error log.",True)
         log.error("Uh oh, " + str(key) + " is of type " + str(type(key)) + "!")
     # Convert unicode objects to UTF-8 strings before shelve these objects.
-    if isinstance(value, list) and self.settings["general"]["persist_size"] != -1 and len(value) > self.settings["general"]["persist_size"]:
+    if type(value) == list and self.settings["general"]["persist_size"] != -1 and len(value) > self.settings["general"]["persist_size"]:
         shelf[str(key.encode("utf-8"))]=value[self.settings["general"]["persist_size"]:]
     else:
         shelf[str(key.encode("utf-8"))]=value
@@ -437,7 +432,7 @@ class Session(object):
    return
   try:
    shelf=shelve.open(paths.config_path(shelfname),'c')
-   for key,value in list(shelf.items()):
+   for key,value in shelf.items():
     self.db[key]=value
    shelf.close()
   except:
@@ -475,14 +470,14 @@ class Session(object):
   return compose.compose_quoted_tweet(quoted_tweet, original_tweet)
 
  def check_long_tweet(self, tweet):
-  longtw = twishort.is_long(tweet)
-  if longtw and config.app["app-settings"]["handle_longtweets"]:
-   tweet["message"] = twishort.get_full_text(longtw)
+  long = twishort.is_long(tweet)
+  if long != False and config.app["app-settings"]["handle_longtweets"]:
+   tweet["message"] = twishort.get_full_text(long)
    if tweet["message"] == False: return False
    tweet["twishort"] = True
    for i in tweet["entities"]["user_mentions"]:
     if "@%s" % (i["screen_name"]) not in tweet["message"] and i["screen_name"] != tweet["user"]["screen_name"]:
      if "retweeted_status" in tweet and tweet["retweeted_status"]["user"]["screen_name"] == i["screen_name"]:
       continue
-     tweet["message"] = "@%s %s" % (i["screen_name"], tweet["message"])
+     tweet["message"] = u"@%s %s" % (i["screen_name"], tweet["message"])
   return tweet

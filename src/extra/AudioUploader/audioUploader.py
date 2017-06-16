@@ -16,9 +16,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ############################################################
-
-from builtins import str
-from builtins import object
+from __future__ import absolute_import
 import widgetUtils
 from . import wx_ui
 from . import wx_transfer_dialogs
@@ -53,7 +51,7 @@ class audioUploader(object):
    self.postprocess()
    log.debug("Uploading file %s to %s..." % (self.file, self.dialog.get("services")))
    self.uploaderDialog = wx_transfer_dialogs.UploadDialog(self.file)
-   output.speak(_("Attaching..."))
+   output.speak(_(u"Attaching..."))
    if self.dialog.get("services") == "SNDUp":
     base_url = "http://sndup.net/post.php"
     if len(self.config["sound"]["sndup_api_key"]) > 0:
@@ -70,12 +68,12 @@ class audioUploader(object):
   return services
 
  def on_pause(self, *args, **kwargs):
-  if self.dialog.get("pause") == _("Pause"):
+  if self.dialog.get("pause") == _(u"Pause"):
    self.recording.pause()
-   self.dialog.set("pause", _("&Resume"))
-  elif self.dialog.get("pause") == _("Resume"):
+   self.dialog.set("pause", _(u"&Resume"))
+  elif self.dialog.get("pause") == _(u"Resume"):
    self.recording.play()
-   self.dialog.set("pause", _("&Pause"))
+   self.dialog.set("pause", _(U"&Pause"))
 
  def on_record(self, *args, **kwargs):
   if self.recording != None:
@@ -90,19 +88,19 @@ class audioUploader(object):
   self.file = tempfile.mktemp(suffix='.wav')
   self.recording = sound.recording(self.file)
   self.recording.play()
-  self.dialog.set("record", _("&Stop"))
-  output.speak(_("Recording"))
+  self.dialog.set("record", _(u"&Stop"))
+  output.speak(_(u"Recording"))
 
  def stop_recording(self):
   self.recording.stop()
   self.recording.free()
-  output.speak(_("Stopped"))
+  output.speak(_(u"Stopped"))
   self.recorded = True
-  self.dialog.set("record", _("&Record"))
+  self.dialog.set("record", _(u"&Record"))
   self.file_attached()
 
  def file_attached(self):
-  self.dialog.set("pause", _("&Pause"))
+  self.dialog.set("pause", _(u"&Pause"))
   self.dialog.disable_control("record")
   self.dialog.enable_control("play")
   self.dialog.enable_control("discard")
@@ -123,7 +121,7 @@ class audioUploader(object):
   self.dialog.record.SetFocus()
   self.dialog.disable_control("discard")
   self.recording = None
-  output.speak(_("Discarded"))
+  output.speak(_(u"Discarded"))
 
  def on_play(self, *args, **kwargs):
   if not self.playing:
@@ -132,30 +130,30 @@ class audioUploader(object):
    self._stop()
 
  def _play(self):
-  output.speak(_("Playing..."))
+  output.speak(_(u"Playing..."))
 #  try:
-  self.playing = sound_lib.stream.FileStream(file=str(self.file), flags=sound_lib.stream.BASS_UNICODE)
+  self.playing = sound_lib.stream.FileStream(file=unicode(self.file), flags=sound_lib.stream.BASS_UNICODE)
   self.playing.play()
-  self.dialog.set("play", _("&Stop"))
+  self.dialog.set("play", _(u"&Stop"))
   try:
    while self.playing.is_playing:
     pass
-   self.dialog.set("play", _("&Play"))
+   self.dialog.set("play", _(u"&Play"))
    self.playing.free()
    self.playing = None
   except:
    pass
 
  def _stop(self):
-  output.speak(_("Stopped"))
+  output.speak(_(u"Stopped"))
   self.playing.stop()
   self.playing.free()
-  self.dialog.set("play", _("&Play"))
+  self.dialog.set("play", _(u"&Play"))
   self.playing = None
 
  def postprocess(self):
   if self.file.lower().endswith('.wav'):
-   output.speak(_("Recoding audio..."))
+   output.speak(_(u"Recoding audio..."))
    sound.recode_audio(self.file)
    self.wav_file = self.file
    self.file = '%s.ogg' % self.file[:-4]

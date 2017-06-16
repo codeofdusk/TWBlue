@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-
-from builtins import str
-from builtins import object
+from __future__ import absolute_import
 import shutil
 import widgetUtils
 import platform

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import absolute_import
 # -*- coding: utf-8 -*-
-from builtins import object
 from . import storage
 import widgetUtils
 from . import wx_settings
@@ -25,7 +24,7 @@ class autocompletionSettings(object):
  def add_users_to_database(self):
   self.config["mysc"]["save_friends_in_autocompletion_db"] = self.dialog.get("friends_buffer")
   self.config["mysc"]["save_followers_in_autocompletion_db"] = self.dialog.get("followers_buffer")
-  output.speak(_("Updating database... You can close this window now. A message will tell you when the process finishes."))
+  output.speak(_(u"Updating database... You can close this window now. A message will tell you when the process finishes."))
   database = storage.storage(self.buffer.session.session_id)
   if self.dialog.get("followers_buffer") == True:
    buffer = self.window.search_buffer("followers", self.config["twitter"]["user_name"])

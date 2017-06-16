@@ -1,5 +1,4 @@
-
-from builtins import str
+from __future__ import absolute_import
 import win32api
 import win32con
 

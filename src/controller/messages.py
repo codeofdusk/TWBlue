@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-
-from builtins import str
-from builtins import range
-from builtins import object
+from __future__ import absolute_import
 import re
 import platform
 from . import attach
@@ -50,18 +47,18 @@ class basicTweet(object):
    self.message.set_text(msg)
    self.text_processor()
    self.message.text_focus()
-   output.speak(_("Translated"))
+   output.speak(_(u"Translated"))
   else:
    return
 
  def shorten(self, event=None):
   urls = utils.find_urls_in_text(self.message.get_text())
   if len(urls) == 0:
-   output.speak(_("There's no URL to be shortened"))
+   output.speak(_(u"There's no URL to be shortened"))
    self.message.text_focus()
   elif len(urls) == 1:
    self.message.set_text(self.message.get_text().replace(urls[0], url_shortener.shorten(urls[0])))
-   output.speak(_("URL shortened"))
+   output.speak(_(u"URL shortened"))
    self.text_processor()
    self.message.text_focus()
   elif len(urls) > 1:
@@ -69,18 +66,18 @@ class basicTweet(object):
    list_urls.populate_list(urls)
    if list_urls.get_response() == widgetUtils.OK:
     self.message.set_text(self.message.get_text().replace(urls[list_urls.get_item()], url_shortener.shorten(list_urls.get_string())))
-    output.speak(_("URL shortened"))
+    output.speak(_(u"URL shortened"))
     self.text_processor()
     self.message.text_focus()
 
  def unshorten(self, event=None):
   urls = utils.find_urls_in_text(self.message.get_text())
   if len(urls) == 0:
-   output.speak(_("There's no URL to be expanded"))
+   output.speak(_(u"There's no URL to be expanded"))
    self.message.text_focus()
   elif len(urls) == 1:
    self.message.set_text(self.message.get_text().replace(urls[0], url_shortener.unshorten(urls[0])))
-   output.speak(_("URL expanded"))
+   output.speak(_(u"URL expanded"))
    self.text_processor()
    self.message.text_focus()
   elif len(urls) > 1:
@@ -88,7 +85,7 @@ class basicTweet(object):
    list_urls.populate_list(urls)
    if list_urls.get_response() == widgetUtils.OK:
     self.message.set_text(self.message.get_text().replace(urls[list_urls.get_item()], url_shortener.unshorten(list_urls.get_string())))
-    output.speak(_("URL expanded"))
+    output.speak(_(u"URL expanded"))
     self.text_processor()
     self.message.text_focus()
 
@@ -100,11 +97,11 @@ class basicTweet(object):
    self.message.disable_button("shortenButton")
    self.message.disable_button("unshortenButton")
   if self.message.get("long_tweet") == False:
-   self.message.set_title(_("%s - %s of %d characters") % (self.title, len(self.message.get_text()), self.max))
+   self.message.set_title(_(u"%s - %s of %d characters") % (self.title, len(self.message.get_text()), self.max))
    if len(self.message.get_text()) > self.max:
     self.session.sound.play("max_length.ogg")
   else:
-   self.message.set_title(_("%s - %s characters") % (self.title, len(self.message.get_text())))
+   self.message.set_title(_(u"%s - %s characters") % (self.title, len(self.message.get_text())))
 
  def spellcheck(self, event=None):
   text = self.message.get_text()
@@ -123,7 +120,7 @@ class basicTweet(object):
     self.message.set_text(self.message.get_text()+url+" #audio")
     self.text_processor()
    else:
-    output.speak(_("Unable to upload the audio"))
+    output.speak(_(u"Unable to upload the audio"))
    dlg.cleanup()
   dlg = audioUploader.audioUploader(self.session.settings, completed_callback)
   self.message.text_focus()
@@ -175,14 +172,14 @@ class reply(tweet):
 
  def get_ids(self):
   excluded_ids  = ""
-  for i in range(0, len(self.message.checkboxes)):
+  for i in xrange(0, len(self.message.checkboxes)):
    if self.message.checkboxes[i].GetValue() == False:
     excluded_ids = excluded_ids + "{0},".format(self.ids[i],)
   return excluded_ids
 
  def get_people(self):
   people  = ""
-  for i in range(0, len(self.message.checkboxes)):
+  for i in xrange(0, len(self.message.checkboxes)):
    if self.message.checkboxes[i].GetValue() == True:
     people = people + "{0} ".format(self.message.checkboxes[i].GetLabel(),)
   return people
@@ -206,7 +203,7 @@ class viewTweet(basicTweet):
   if is_tweet == True:
    image_description = []
    text = ""
-   for i in range(0, len(tweetList)):
+   for i in xrange(0, len(tweetList)):
     # tweets with message keys are longer tweets, the message value is the full messaje taken from twishort.
     if "message" in tweetList[i] and tweetList[i]["is_quote_status"] == False:
      value = "message"
@@ -232,7 +229,7 @@ class viewTweet(basicTweet):
    rt_count = str(tweet["retweet_count"])
    favs_count = str(tweet["favorite_count"])
    # Gets the client from where this tweet was made.
-   source = str(re.sub(r"(?s)<.*?>", "", str(tweet["source"])))
+   source = str(re.sub(r"(?s)<.*?>", "", tweet["source"].encode("utf-8")))
    if text == "":
     if "message" in tweet:
      value = "message"
@@ -254,7 +251,7 @@ class viewTweet(basicTweet):
     for z in tweet["retweeted_status"]["extended_entities"]["media"]:
      if "ext_alt_text" in z and z["ext_alt_text"] != None:
       image_description.append(z["ext_alt_text"])
-   self.message = message.viewTweet(text, rt_count, favs_count, source)
+   self.message = message.viewTweet(text, rt_count, favs_count, source.decode("utf-8"))
    self.message.set_title(len(text))
    [self.message.set_image_description(i) for i in image_description]
   else:

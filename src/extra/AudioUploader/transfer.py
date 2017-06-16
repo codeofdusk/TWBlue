@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-
-
-from builtins import object
-from past.utils import old_div
+from __future__ import absolute_import
 import sys
 import threading
 import time

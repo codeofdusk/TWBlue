@@ -1,7 +1,5 @@
-
-from future import standard_library
-standard_library.install_aliases()
-import urllib.request, urllib.parse, urllib.error
+from __future__ import absolute_import
+import urllib
 
 from .url_shortener import URLShortener
 
@@ -12,7 +10,7 @@ class OnjmeShortener (URLShortener):
 
  def _shorten (self, url):
   answer = url
-  api = urllib.request.urlopen ("http://onj.me/yourls-api.php?action=shorturl&format=simple&url=" + urllib.parse.quote(url))
+  api = urllib.urlopen ("http://onj.me/yourls-api.php?action=shorturl&format=simple&url=" + urllib.quote(url))
   if api.getcode() == 200:
    answer = api.read()
   api.close()
