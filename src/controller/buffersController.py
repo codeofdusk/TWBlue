@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-
-from builtins import str
-from builtins import range
-from builtins import object
 import time
 import platform
 if platform.system() == "Windows":
@@ -518,10 +514,10 @@ class baseBufferController(bufferController):
   ids = utils.get_all_mentioned(tweet, self.session.db, field="id_str")
   # Build the window title
   if len(users) < 1:
-    title=_("Reply to {}".format(screen_name))
+   title=_("Reply to {arg0}").format(arg0=screen_name)
   else:
-    title=_("Reply")
-  message = messages.reply(self.session, title, _(u"Reply to {}".format(screen_name)), "", twishort_enabled=self.session.settings["mysc"]["twishort_enabled"], users=users, ids=ids)
+   title=_("Reply")
+  message = messages.reply(self.session, title, _("Reply to %s") % (screen_name,), "", twishort_enabled=self.session.settings["mysc"]["twishort_enabled"], users=users, ids=ids)
   if message.message.get_response() == widgetUtils.OK:
    params = {"_sound": "reply_send.ogg", "in_reply_to_status_id": id,}
    self.session.settings["mysc"]["twishort_enabled"] = message.message.long_tweet.GetValue()
@@ -614,7 +610,7 @@ class baseBufferController(bufferController):
    # fix this:
    original_date = arrow.get(self.session.db[self.name][self.buffer.list.get_selected()]["created_at"], "ddd MMM D H:m:s Z YYYY", locale="en")
    ts = original_date.humanize(locale=languageHandler.getLanguage())
-   self.buffer.list.list.SetItem(self.buffer.list.get_selected(), 2, str(ts))
+   self.buffer.list.list.SetStringItem(self.buffer.list.get_selected(), 2, ts)
   if self.session.settings['sound']['indicate_audio'] and utils.is_audio(tweet):
    self.session.sound.play("audio.ogg")
   if self.session.settings['sound']['indicate_geo'] and utils.is_geocoded(tweet):
